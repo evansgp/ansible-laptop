@@ -6,4 +6,7 @@
     - base
     - desktop
     - dev
-
+    - dev-node
+    - dev-python
+    - dev-ruby
+    - dev-c-xdot

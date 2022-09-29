@@ -1,0 +1,11 @@
+---
+- name: Install nvm
+  shell:
+    cmd: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+    creates: "{{ home }}/.nvm/nvm.sh"
+
+- name: Install latest node if no version installed
+  shell:
+    cmd: "source {{ home }}/.nvm/nvm.sh && nvm install node"
+    executable: /bin/bash
+    creates: "{{ home }}/.nvm/versions/node"
