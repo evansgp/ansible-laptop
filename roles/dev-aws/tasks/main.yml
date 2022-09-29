@@ -1,0 +1,25 @@
+---
+
+- name: Check if AWS CLI exists
+  stat:
+    path: /usr/local/bin/aws
+  register: check_awscli
+
+- name: Create AWS CLI tempdir
+  tempfile:
+    state: directory
+  register: tmp_awscli
+  when: not check_awscli.stat.exists
+
+- name: Download AWS CLI
+  unarchive:
+    src: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+    remote_src: yes
+    dest: "{{ tmp_awscli.path }}"
+  when: not check_awscli.stat.exists
+
+- name: Install AWS CLI
+  become: true
+  command:
+    cmd: "{{ tmp_awscli.path }}/aws/install"
+  when: not check_awscli.stat.exists
