@@ -64,3 +64,24 @@
     deb: https://go.microsoft.com/fwlink/p/?LinkID=2112886&clcid=0xc09&culture=en-au&country=AU
   when: check_teams.rc == 1
 
+- name: Check if i3 is installed
+  command: dpkg-query -W i3
+  register: check_i3
+  failed_when: false
+  changed_when: false
+
+- name: Install i3 key file
+  become: true
+  apt:
+    deb: https://debian.sur5r.net/i3/pool/main/s/sur5r-keyring/sur5r-keyring_2022.02.17_all.deb
+  when: check_i3.rc == 1
+
+- name: Add i3 repository
+  become: true
+  apt_repository:
+    repo: "deb http://debian.sur5r.net/i3/ {{ ansible_distribution_release }} universe"
+
+- name: Install i3
+  become: true
+  apt:
+    name: i3
