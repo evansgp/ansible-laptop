@@ -6,3 +6,4 @@ default_branch: main
 home: "/home/{{ username }}"
 app_install_dir: "{{ home }}/.local/share"
 git_dir: "{{ home }}/git"
+dotfiles_repo: git@github.com:evansgp/cfg.git

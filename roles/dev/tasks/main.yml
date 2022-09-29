@@ -73,3 +73,47 @@
     name: "{{ username }}"
     groups: docker
     append: yes
+
+- name: Check for oh-my-zsh install
+  stat:
+    path: "{{ home }}/.oh-my-zsh/oh-my-zsh.sh"
+  register: check_ohmyzsh
+
+- name: Create oh-my-zsh tempdir
+  tempfile:
+    state: directory
+  register: tmp_ohmyzsh
+  when: not check_ohmyzsh.stat.exists
+
+- name: Get oh-my-zsh install script
+  get_url:
+    url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+    dest: "{{ tmp_ohmyzsh.path }}/install.sh"
+  when: not check_ohmyzsh.stat.exists
+
+- name: Install oh-my-zsh
+  command:
+    cmd: 'sh {{ tmp_ohmyzsh.path }}/install.sh "" --unattended'
+  when: not check_ohmyzsh.stat.exists
+
+- name: Set our user to use zsh
+  become: true
+  user:
+    name: "{{ username }}"
+    shell: /usr/bin/zsh
+
+- name: Check if we have our dotfiles
+  stat:
+    path: "{{ app_install_dir }}/yadm/repo.git"
+  register: check_dotfiles
+
+- name: Get our dotfiles repo
+  command:
+    cmd: "yadm clone {{ dotfiles_repo }} -f"
+  when: not check_dotfiles.stat.exists
+
+# TODO there might be something wrong with this
+- name: Assert our dotfiles dominance
+  command:
+    cmd: "yadm checkout \"{{ home }}\""
+  when: not check_dotfiles.stat.exists
