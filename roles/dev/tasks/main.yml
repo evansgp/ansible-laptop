@@ -11,6 +11,11 @@
       - python3-pip
       - python3-venv
 
+- name: Ensure git directory
+  file:
+    path: "{{ git_dir }}"
+    state: directory
+
 - name: Install pipx
   pip:
     name: pipx

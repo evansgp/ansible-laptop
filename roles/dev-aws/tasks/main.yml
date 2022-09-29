@@ -37,3 +37,9 @@
     inject_packages: awsume-console-plugin
     name: awsume
     state: inject
+
+- name: Checkout ssh-over-ssm
+  ansible.builtin.git:
+    repo: git@github.com:elpy1/ssh-over-ssm.git
+    dest: "{{ git_dir }}/ssh-over-ssm"
+    update: no

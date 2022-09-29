@@ -5,3 +5,4 @@ username: gareth
 default_branch: main
 home: "/home/{{ username }}"
 app_install_dir: "{{ home }}/.local/share"
+git_dir: "{{ home }}/git"
