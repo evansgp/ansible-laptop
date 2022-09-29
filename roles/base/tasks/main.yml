@@ -8,6 +8,8 @@
       - software-properties-common
       - curl
       - zip
+      - gnupg
+      - lsb-release
 
 - name: Update apt if older than a day
   become: true
