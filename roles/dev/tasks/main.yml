@@ -10,6 +10,17 @@
       - yadm
       - python3-pip
 
+- name: Generate SSH key pair
+  openssh_keypair:
+    path: "{{ home }}/.ssh/id_ed25519"
+    type: ed25519
+  register: ssh_id
+
+- name: Prompt to register SSH key
+  pause:
+    prompt: "A new SSH key was created, register it where desired:\n\t{{ ssh_id.public_key }}\nAny key to continue"
+  when: ssh_id.changed
+
 - name: Install nvm
   shell:
     cmd: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
