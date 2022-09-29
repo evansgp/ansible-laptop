@@ -27,3 +27,13 @@
 - name: Install aws-sso-util
   community.general.pipx:
     name: aws-sso-util
+
+- name: Install awssume
+  community.general.pipx:
+    name: awsume
+
+- name: Install awssume-console
+  community.general.pipx:
+    inject_packages: awsume-console-plugin
+    name: awsume
+    state: inject
