@@ -1,0 +1,14 @@
+---
+- name: Install pre-requisites
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - software-properties-common
+      - curl
+      - zip
+
+- name: Update apt if older than a day
+  apt:
+    update_cache: yes
+    cache_valid_time: 86400

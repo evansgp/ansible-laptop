@@ -1,0 +1,64 @@
+---
+- name: Install desktop software
+  apt:
+    name:
+      - powertop
+      - iftop
+      - htop
+      - iotop
+      - baobab
+      - libreoffice
+
+- name: Ensure firefox destination
+  file:
+    path: "{{ app_install_dir }}/firefox"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+
+- name: Download and extract firefox
+  become_user: "{{ username }}"
+  unarchive:
+    src: "{{ firefox_download_url }}"
+    dest: "{{ app_install_dir }}"
+    creates: "{{ app_install_dir }}/firefox/firefox"
+    remote_src: yes
+
+- name: Create firefox .desktop file
+  template:
+    src: firefox.desktop.j2
+    dest: "{{ app_install_dir }}/applications/firefox.desktop"
+
+- name: Remove system apt firefox
+  apt:
+    name: firefox
+    state: absent
+
+- name: Remove system snap firefox
+  snap:
+    name: firefox
+    state: absent
+
+- name: Check if slack is installed
+  command: dpkg-query -W slack-desktop
+  register: check_slack
+  failed_when: false
+  changed_when: false
+
+- name: Install slack
+  apt:
+    # unfortunately unable to find a magic 'latest' link, however it is evergreen..
+    deb: "https://downloads.slack-edge.com/releases/linux/{{ slack_version }}/prod/x64/slack-desktop-{{ slack_version }}-amd64.deb"
+  when: check_slack.rc == 1
+
+- name: Check if MS teams is installed
+  command: dpkg-query -W teams
+  register: check_teams
+  failed_when: false
+  changed_when: false
+
+- name: Install MS teams
+  apt:
+    deb: https://go.microsoft.com/fwlink/p/?LinkID=2112886&clcid=0xc09&culture=en-au&country=AU
+  when: check_teams.rc == 1
+

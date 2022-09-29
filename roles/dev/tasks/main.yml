@@ -1,0 +1,34 @@
+---
+- name: Install development software
+  apt:
+    name:
+      - vim
+      - git
+      - zsh
+      - fonts-powerline
+      - yadm
+      - python3-pip
+
+- name: Install nvm
+  become_user: "{{ username }}"
+  shell:
+    cmd: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+    creates: "{{ home }}/.nvm/nvm.sh"
+
+- name: Install latest node if no version installed
+  become_user: "{{ username }}"
+  shell:
+    cmd: "source {{ home }}/.nvm/nvm.sh && nvm install node"
+    executable: /bin/bash
+    creates: "{{ home }}/.nvm/versions/node"
+
+- name: Check if VS code is installed
+  command: dpkg-query -W code
+  register: check_code
+  failed_when: false
+  changed_when: false
+
+- name: Install VS code
+  apt:
+    deb: https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
+  when: check_code.rc == 1
