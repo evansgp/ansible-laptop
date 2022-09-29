@@ -23,3 +23,7 @@
   command:
     cmd: "{{ tmp_awscli.path }}/aws/install"
   when: not check_awscli.stat.exists
+
+- name: Install aws-sso-util
+  community.general.pipx:
+    name: aws-sso-util

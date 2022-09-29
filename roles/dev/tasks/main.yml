@@ -9,6 +9,11 @@
       - fonts-powerline
       - yadm
       - python3-pip
+      - python3-venv
+
+- name: Install pipx
+  pip:
+    name: pipx
 
 - name: Generate SSH key pair
   openssh_keypair:
