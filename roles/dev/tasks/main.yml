@@ -1,5 +1,6 @@
 ---
 - name: Install development software
+  become: true
   apt:
     name:
       - vim
@@ -10,13 +11,11 @@
       - python3-pip
 
 - name: Install nvm
-  become_user: "{{ username }}"
   shell:
     cmd: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
     creates: "{{ home }}/.nvm/nvm.sh"
 
 - name: Install latest node if no version installed
-  become_user: "{{ username }}"
   shell:
     cmd: "source {{ home }}/.nvm/nvm.sh && nvm install node"
     executable: /bin/bash
@@ -29,6 +28,7 @@
   changed_when: false
 
 - name: Install VS code
+  become: true
   apt:
     deb: https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
   when: check_code.rc == 1

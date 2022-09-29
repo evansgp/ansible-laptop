@@ -1,5 +1,6 @@
 ---
 - name: Install desktop software
+  become: true
   apt:
     name:
       - powertop
@@ -13,11 +14,8 @@
   file:
     path: "{{ app_install_dir }}/firefox"
     state: directory
-    owner: "{{ username }}"
-    group: "{{ username }}"
 
 - name: Download and extract firefox
-  become_user: "{{ username }}"
   unarchive:
     src: "{{ firefox_download_url }}"
     dest: "{{ app_install_dir }}"
@@ -30,11 +28,13 @@
     dest: "{{ app_install_dir }}/applications/firefox.desktop"
 
 - name: Remove system apt firefox
+  become: true
   apt:
     name: firefox
     state: absent
 
 - name: Remove system snap firefox
+  become: true
   snap:
     name: firefox
     state: absent
@@ -46,6 +46,7 @@
   changed_when: false
 
 - name: Install slack
+  become: true
   apt:
     # unfortunately unable to find a magic 'latest' link, however it is evergreen..
     deb: "https://downloads.slack-edge.com/releases/linux/{{ slack_version }}/prod/x64/slack-desktop-{{ slack_version }}-amd64.deb"
@@ -58,6 +59,7 @@
   changed_when: false
 
 - name: Install MS teams
+  become: true
   apt:
     deb: https://go.microsoft.com/fwlink/p/?LinkID=2112886&clcid=0xc09&culture=en-au&country=AU
   when: check_teams.rc == 1

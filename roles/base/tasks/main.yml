@@ -1,5 +1,6 @@
 ---
 - name: Install pre-requisites
+  become: true
   apt:
     name:
       - apt-transport-https
@@ -9,6 +10,7 @@
       - zip
 
 - name: Update apt if older than a day
+  become: true
   apt:
     update_cache: yes
     cache_valid_time: 86400

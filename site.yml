@@ -1,7 +1,6 @@
 ---
 - name: Provisions a development environment
   hosts: localhost
-  become: yes
 
   roles:
     - base
